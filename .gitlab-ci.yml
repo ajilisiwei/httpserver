@@ -1,0 +1,42 @@
+variables:
+  IMAGE_NAME: "httpserver"
+  IMAGE_TAG: "latest"
+
+# 定义阶段的执行顺序 分为 3个阶段
+stages:
+  - stage-test
+  - stage-build
+  - stage-deploy
+
+test_job:
+  stage: stage-test
+  tags:
+    - ci-test
+  script:
+    - echo "开始单元测试..."
+    - echo "单元测试完成!"
+
+docker_job:
+  stage: stage-build
+  tags:
+    - ci-test
+  only:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /^build.*/
+  script:
+    - echo "开始docker镜像构建..."
+    - docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+    - docker tag $IMAGE_NAME:$IMAGE_TAG harbor.ajilisiwei.com/repo1/${IMAGE_NAME}:${IMAGE_TAG}
+    - docker push harbor.ajilisiwei.com/repo1/${IMAGE_NAME}:${IMAGE_TAG}
+    - echo "docker镜像构建完成!"
+
+deploy_job:
+  stage: stage-deploy
+  tags:
+    - ci-test
+  only:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /^build.*/
+  script:
+    - echo "开始测试服更新..."
+    - echo "测试服更新完成!"

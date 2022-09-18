@@ -1,0 +1,9 @@
+@baseUrl=http://192.168.56.4:8080 
+
+POST {{baseUrl}}/login HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+acc=foo&psw=123
+
+GET http://localhost:8080/info HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2MiOiJmb28iLCJuYmYiOjE0NDQ0Nzg0MDB9.gDY-ayqDRPwXXfBnI-g7NffYTyWamWs3BXC80wBPNuw
